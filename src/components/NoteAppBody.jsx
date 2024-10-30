@@ -1,27 +1,54 @@
 import React from 'react'
 import NoteItem from './NoteItem'
 
-const NoteAppBody = () => {
-  return (
-    <div>
-      <div className='note-app__body'>
-        <div className='note-input'>
+class NoteAppBody extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      title: '',
+      body: '', 
+    }
+
+    this.onTitleChangeEventHandler = this.onTitleChangeEventHandler.bind(this);
+    this.onBodyChangeEventHandler = this.onBodyChangeEventHandler.bind(this);
+    this.onSubmitEventHandler = this.onSubmitEventHandler.bind(this)
+  }
+
+  onTitleChangeEventHandler(event) {
+    this.setState(() => {
+      return {
+        title: event.target.value
+      }
+    })
+  }
+
+  onBodyChangeEventHandler(event) {
+    this.setState(() => {
+      return {
+        body: event.target.value
+      }
+    })
+  }
+
+  onSubmitEventHandler(event) {
+    event.preventDefault();
+    this.props.addNote(this.state)
+  }
+
+  render() {
+    return (
+      <div className='note-app__body' onSubmit={this.onSubmitEventHandler}>
+        <form className='note-input'>
           <h2>Buat Catatan</h2>
           <p className='note-input__title__char-limit'>Sisa Karakter:</p>
-          <input className='note-input' placeholder='Ini adalah judul...' />
-          <textarea placeholder='Tuliskan catatanmu disini...' rows={10} />
-          <button>Buat</button>
-        </div>
+          <input className='note-input' placeholder='Ini adalah judul...' value={this.state.title} onChange={this.onTitleChangeEventHandler} />
+          <textarea placeholder='Tuliskan catatanmu disini...' rows={10} value={this.state.body} onChange={this.onBodyChangeEventHandler} />
+          <button type='submit'>Buat</button>
+        </form>
       </div>
-      <div className='note-list__body'>
-        <h2>Catatan Aktif</h2>
-        <div className='notes-list'>
-          <NoteItem />
-        </div>
-      </div>
-    </div>
-
-  )
+    )
+  }
 }
 
 export default NoteAppBody
