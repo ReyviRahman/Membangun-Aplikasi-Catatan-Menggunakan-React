@@ -2,7 +2,8 @@ import React from 'react'
 import Navbar from './Navbar'
 import NoteAppBody from './NoteAppBody'
 import NoteListBody from './NoteListBody'
-import { getInitialData } from '../utils/index'
+import { getInitialData, showFormattedDate} from '../utils/index'
+import ArchivedListBody from './ArchivedListBody'
 
 class NotesApp extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class NotesApp extends React.Component {
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onAddNotesHandler = this.onAddNotesHandler.bind(this);
     this.handleSearch = this.handleSearch.bind(this)
+    this.onArchiveHandler = this.onArchiveHandler.bind(this);
   }
 
   onDeleteHandler(id) {
@@ -44,6 +46,16 @@ class NotesApp extends React.Component {
     this.setState({ searchTerm: keyword });
   }
 
+  onArchiveHandler(id) {
+    this.setState((prevState) => {
+      const updatedNotes = prevState.notes.map(note => 
+        note.id === id ? {...note, archived: !note.archived} : note
+      );
+      console.log(updatedNotes)
+      return { notes: updatedNotes}
+    })
+  }
+
   render() {
     const filteredNotes = this.state.notes.filter(note => 
       note.title.toLowerCase().includes(this.state.searchTerm.toLowerCase()) 
@@ -53,7 +65,11 @@ class NotesApp extends React.Component {
       <div>
         <Navbar handleSearch={this.handleSearch} />
         <NoteAppBody addNote={this.onAddNotesHandler} />
-        <NoteListBody notes={filteredNotes} onDelete={this.onDeleteHandler} />
+        <NoteListBody notes={filteredNotes} onArchived={this.onArchiveHandler} onDelete={this.onDeleteHandler} showFormattedDate={showFormattedDate} />
+
+        <ArchivedListBody notes={filteredNotes} onArchived={this.onArchiveHandler} onDelete={this.onDeleteHandler} showFormattedDate={showFormattedDate} />
+
+
       </div>
     );
   }

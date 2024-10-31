@@ -39,8 +39,8 @@ input::placeholder, textarea::placeholder {
 
 .note-list__body {
   max-width: 1000px;
-  margin: 16px auto;
-  padding: 12px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .note-list__body h2 {
