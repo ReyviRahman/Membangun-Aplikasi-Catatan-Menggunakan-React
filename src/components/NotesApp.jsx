@@ -9,10 +9,12 @@ class NotesApp extends React.Component {
     super(props);
     this.state = {
       notes: getInitialData(),
+      searchTerm: ''
     }
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onAddNotesHandler = this.onAddNotesHandler.bind(this);
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   onDeleteHandler(id) {
@@ -22,12 +24,11 @@ class NotesApp extends React.Component {
 
   onAddNotesHandler({title, body}) {
     this.setState((prevState) => {
-      console.log(this.state.notes)
       return {
         notes: [
           ...prevState.notes,
           {
-            id: + new Date(),
+            id: +new Date(),
             title,
             body,
             archived: false,
@@ -38,12 +39,21 @@ class NotesApp extends React.Component {
     })
   }
 
+  handleSearch(event) {
+    const keyword = event.target.value;
+    this.setState({ searchTerm: keyword });
+  }
+
   render() {
+    const filteredNotes = this.state.notes.filter(note => 
+      note.title.toLowerCase().includes(this.state.searchTerm.toLowerCase()) 
+    );
+
     return (
       <div>
-        <Navbar />
+        <Navbar handleSearch={this.handleSearch} />
         <NoteAppBody addNote={this.onAddNotesHandler} />
-        <NoteListBody notes={this.state.notes} onDelete={this.onDeleteHandler} />
+        <NoteListBody notes={filteredNotes} onDelete={this.onDeleteHandler} />
       </div>
     );
   }
